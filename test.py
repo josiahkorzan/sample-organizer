@@ -40,32 +40,23 @@ def move_files_to_parent(folder):
         print("Please change the destination folder")
         return
     
-    # THIS IS BROKEN!!!!
     for root, dirs, files in os.walk(folder, topdown=False):
-        for file in files:
-            file_path = os.path.join(root, file)
-            # Get the name of the folder the file is currently in
-            folder_name = os.path.basename(root)
+        for file_name in files:
+            file_path = os.path.join(root, file_name)
+            parent_folder_name = os.path.basename(root)
+            
+            # Split the file name and extension
+            name, ext = os.path.splitext(file_name)
             
             # Create the new file name by appending the folder name
-            if folder_name not in os.path.splitext(file)[0] and folder_name != root:
-                new_file_name = f"{os.path.splitext(file)[0]} : {folder_name}{os.path.splitext(file)[1]}"
-                dest_path = os.path.join(folder, new_file_name)
-            else:
-                new_file_name = file
-                dest_path = os.path.join(folder, file)
-            
-            # If the file already exists, append the parent folder name
-            while any(os.path.exists(os.path.join(root, new_file_name)) for root, _, _ in os.walk(folder)):
-                parent_folder_name = os.path.basename(os.path.dirname(root))
-                new_file_name = f"{os.path.splitext(new_file_name)[0]} : {parent_folder_name}{os.path.splitext(new_file_name)[1]}"
-                dest_path = os.path.join(folder, new_file_name)
-                
-                # Truncate the file name if it exceeds a certain length
-                if len(new_file_name) > 255:
-                    new_file_name = new_file_name[:255 - len(os.path.splitext(new_file_name)[1])] + os.path.splitext(new_file_name)[1]
-                    dest_path = os.path.join(folder, new_file_name)
-            
+            if parent_folder_name not in file_name:
+                new_file_path = os.path.join(root, f"{name}__{parent_folder_name}{ext}") 
+                os.rename(file_path, new_file_path)
+    
+    for root, dirs, files in os.walk(folder, topdown=False):    
+        for file_name in files:
+            file_path = os.path.join(root, file_name)
+            dest_path = os.path.join(folder, file_name)    
             shutil.move(file_path, dest_path)
             
         for dir in dirs:
@@ -125,7 +116,7 @@ def sort_audio_files(folder):
                 
 
 def main():
-    parent_folder = r'/Users/josiahkorzan/Desktop/Programming/Projects/sample-organizer/test folder'
+    parent_folder = r'/Users/josiahkorzan/Desktop/Programming/Projects/sample-organizer/ARCHIVE'
     move_files_to_parent(parent_folder)
     sort_audio_files(parent_folder)
 
