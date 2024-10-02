@@ -60,10 +60,12 @@ def move_files_to_parent(folder):
             file_path = os.path.join(root, file_name)
             dest_path = os.path.join(folder, file_name)    
             shutil.move(file_path, dest_path)
+            print(f"file: {file_path}, moved")
             
         for dir in dirs:
             dir_path = os.path.join(root, dir)
             os.rmdir(dir_path)
+        
 
 def get_file_type_percentages(folder):
     if not os.path.exists(folder):
@@ -90,7 +92,7 @@ def get_file_type_percentages(folder):
 
 def sort_audio_files(folder):
     # Define the allowed audio file extensions
-    audio_extensions = {'.mp3', '.wav', '.aiff', '.flac'}
+    audio_extensions = {'.wav'}
     
     # Create the 'not_audio_files' subfolder if it doesn't exist
     not_audio_folder = os.path.join(folder, '_other')
@@ -116,17 +118,18 @@ def sort_audio_files(folder):
                 dest_path = os.path.join(audio_folder, file)
                 shutil.move(source_path, dest_path)
        
-def sort_audio_files_by_wavform(folder):
-    for root, dirs, files in os.walk(folder):
-        for file in files:
-            print(file)      
+# def sort_audio_files_by_wavform(folder):
+#     for root, dirs, files in os.walk(folder):
+#         for file in files:
+#             print(file)      
 
 def main():
-    parent_folder = r'/Users/josiahkorzan/Desktop/Programming/Projects/sample-organizer/test folder compare'
+    parent_folder = r'/Users/josiahkorzan/Desktop/Programming/Projects/test_folder_large'
     move_files_to_parent(parent_folder)
     sort_audio_files(parent_folder)
+    print("Done.")
 
-    print("All files have been moved and subfolders deleted.")
+    
 
 if __name__ == "__main__":
     main()
